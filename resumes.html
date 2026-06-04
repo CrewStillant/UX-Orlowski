@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résumés - OLPLAY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/category.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="main.html" class="nav-logo">
+            <svg viewBox="0 0 4395.89 861.47" xmlns="http://www.w3.org/2000/svg">
+                <path class="logo-path" fill="#E5202E" fill-rule="evenodd" d="m455.69,0C198.49,0,0,174.79,0,430.73s198.49,430.74,455.69,430.74,455.69-174.79,455.69-430.74S712.88,0,455.69,0Zm0,639.22c-121.12,0-199.75-92.4-199.75-208.49s78.63-208.48,199.75-208.48,199.75,92.39,199.75,208.48-78.63,208.49-199.75,208.49ZM4147.18,13.76l-101.31,274.92-101.35-274.92h-248.57l225.63,612-81.39,220.68h249.6L4395.89,13.76h-248.71Zm-3208.34-.06h252.17v613.07h315.9v219.67h-568.07V13.7Zm1051.15,0h-444.44v832.74h252.17v-262.16h192.27c194.78,0,299.62-129.85,299.62-284.66S2184.77,13.7,1989.99,13.7Zm-32.43,350.84h-159.84v-131.11h159.84c42.43,0,76.18,21.24,76.18,66.18s-33.69,64.93-76.18,64.93Zm920.11,478.44L3183.51,13.7h317.09l307.23,832.74h-285.9l-29.98-97.36h-299.63l-29.98,97.36h-852.67V13.7h252.17v613.01h315.83v216.28Zm464.42-582.08l-82.4,268.44h164.8l-82.4-268.44Z"/>
+            </svg>
+        </a>
+        <button class="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-menu">
+            <ul class="nav-sections">
+                <li class="nav-item"><a href="matchs.html">Matchs</a></li>
+                <li class="nav-item"><a href="resumes.html">Résumés</a></li>
+                <li class="nav-item"><a href="grandformat.html">Grand Format</a></li>
+                <li class="nav-item nav-live-item"><a href="player.html" class="nav-live-link">LE LIVE</a></li>
+                <li class="nav-item"><a href="avantmatch.html">Avant match</a></li>
+                <li class="nav-item"><a href="apres.html">Après match</a></li>
+                <li class="nav-item"><a href="coulisses.html">Coulisses</a></li>
+            </ul>
+            <div class="nav-right">
+                <button class="nav-subscribe">S'abonner</button>
+                <button class="nav-signin">Se connecter</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="category-hero">
+        <div class="hero-content">
+            <h1>Résumés</h1>
+            <p>Les meilleurs moments en 5 minutes</p>
+        </div>
+        <div class="hero-background">
+            <img src="images/Niakhate.jpg" alt="Résumés" class="hero-img">
+            <div class="hero-overlay"></div>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content-wrapper">
+        <div class="category-grid" id="contentGrid">
+            <!-- Videos will be rendered here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="cta-section">
+        <h2>Découvrez tous nos matchs</h2>
+        <a href="matchs.html" class="btn-primary">VER LES MATCHS</a>
+    </div>
+
+    <!-- ── Footer ─────────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-grid">
+                <!-- Logo & Description -->
+                <div class="footer-col footer-logo-section">
+                    <div class="footer-logo">
+                        <svg viewBox="0 0 4395.89 861.47" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#E5202E" fill-rule="evenodd" d="m455.69,0C198.49,0,0,174.79,0,430.73s198.49,430.74,455.69,430.74,455.69-174.79,455.69-430.74S712.88,0,455.69,0Zm0,639.22c-121.12,0-199.75-92.4-199.75-208.49s78.63-208.48,199.75-208.48,199.75,92.39,199.75,208.48-78.63,208.49-199.75,208.49ZM4147.18,13.76l-101.31,274.92-101.35-274.92h-248.57l225.63,612-81.39,220.68h249.6L4395.89,13.76h-248.71Zm-3208.34-.06h252.17v613.07h315.9v219.67h-568.07V13.7Zm1051.15,0h-444.44v832.74h252.17v-262.16h192.27c194.78,0,299.62-129.85,299.62-284.66S2184.77,13.7,1989.99,13.7Zm-32.43,350.84h-159.84v-131.11h159.84c42.43,0,76.18,21.24,76.18,66.18s-33.69,64.93-76.18,64.93Zm920.11,478.44L3183.51,13.7h317.09l307.23,832.74h-285.9l-29.98-97.36h-299.63l-29.98,97.36h-852.67V13.7h252.17v613.01h315.83v216.28Zm464.42-582.08l-82.4,268.44h164.8l-82.4-268.44Z"/>
+                        </svg>
+                    </div>
+                    <p class="footer-desc">Regardez tous les matchs, résumés et contenus exclusifs de l'Olympique Lyonnais en HD sur tous vos appareils.</p>
+                </div>
+
+                <!-- OLPLAY Links -->
+                <div class="footer-col">
+                    <h4>OLPLAY</h4>
+                    <ul>
+                        <li><a href="main.html">Accueil</a></li>
+                        <li><a href="matchs.html">Matchs</a></li>
+                        <li><a href="#">À propos</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Links -->
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="footer-col">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Cookies</a></li>
+                        <li><a href="#">Mentions légales</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">© 2026 Olympique Lyonnais. Tous droits réservés.</div>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social-link">Twitter</a>
+                    <a href="#" class="footer-social-link">Instagram</a>
+                    <a href="#" class="footer-social-link">Facebook</a>
+                    <a href="#" class="footer-social-link">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/components/navbar.js"></script>
+    <script src="js/category.js"></script>
+    <script src="js/cursor.js"></script>
+</body>
+</html>

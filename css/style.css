@@ -1,0 +1,185 @@
+/* =====================================================================
+   OLPLAY — Splash Screen Styles
+   Scope: Index.html only. Main page styles are injected via script.js.
+   ===================================================================== */
+
+/* ─── CSS Variables ─────────────────────────────────────────────────── */
+:root {
+    --color-primary:   #006AA3;
+    --color-secondary: #3C438A;
+    --color-red:       #E5202E;
+    --color-white:     #ffffff;
+    --color-black:     #000000;
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ─── Body ───────────────────────────────────────────────────────────── */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--color-black);
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ─── Background (animated radial blobs) ────────────────────────────── */
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 30% 20%, rgba(0, 106, 163, 0.4)  0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(60, 67, 138, 0.3)  0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(229, 32, 46, 0.15) 0%, transparent 60%);
+    animation: bgPulse 8s ease-in-out infinite;
+}
+
+@keyframes bgPulse {
+    0%, 100% { opacity: 0.8; }
+    50%       { opacity: 1;   }
+}
+
+/* ─── Floating Particles ─────────────────────────────────────────────── */
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--color-red);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatUp 6s ease-in-out infinite;
+}
+
+@keyframes floatUp {
+    0%, 100% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+    }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.8; }
+    100% {
+        transform: translateY(-100vh) scale(1);
+        opacity: 0;
+    }
+}
+
+/* ─── Main Container ─────────────────────────────────────────────────── */
+.container {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+    opacity: 0;
+    animation: containerEntrance 1.2s ease-out forwards;
+}
+
+@keyframes containerEntrance {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1);   }
+}
+
+/* ─── OLPLAY Logo ────────────────────────────────────────────────────── */
+.logo-container {
+    position: relative;
+    display: inline-block;
+}
+
+.olplay-logo {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.5s ease-out;
+    width: clamp(200px, 50vw, 500px);
+    height: auto;
+}
+
+.olplay-logo:hover {
+    transform: scale(1.05);
+}
+
+.olplay-logo svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    animation: olGlow 2s ease-in-out infinite alternate;
+}
+
+.olplay-logo svg .logo-path {
+    transition: filter 0.3s ease;
+}
+
+@keyframes olGlow {
+    0%   { filter: drop-shadow(0 0 10px rgba(229, 32, 46, 0.5)); }
+    100% { filter: drop-shadow(0 0 25px rgba(229, 32, 46, 0.8)); }
+}
+
+/* ─── Logo Zoom-out Transition ───────────────────────────────────────── */
+.olplay-logo.zooming svg {
+    animation: zoomOL 0.8s ease-in forwards;
+}
+
+@keyframes zoomOL {
+    0%   { transform: scale(1);  opacity: 1; }
+    50%  { transform: scale(3);  opacity: 1; }
+    100% { transform: scale(50); opacity: 0; }
+}
+
+/* Hide tagline while zooming */
+.olplay-logo.zooming + .tagline {
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* ─── Tagline ────────────────────────────────────────────────────────── */
+.tagline {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 1.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeInUp 1s ease-out 1s forwards;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ─── Loading Bar ────────────────────────────────────────────────────── */
+.loading-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary), var(--color-red));
+    width: 0;
+    animation: loadingProgress 2s ease-out 1.5s forwards;
+}
+
+@keyframes loadingProgress {
+    to { width: 100%; }
+}
+
+/* ─── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .olplay-logo {
+        letter-spacing: 0.02em;
+    }
+}

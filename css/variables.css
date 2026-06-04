@@ -1,0 +1,40 @@
+/* =====================================================================
+   OLPLAY — CSS Variables
+   Variables globales partagées par toutes les pages
+   ===================================================================== */
+
+:root {
+    /* ── Brand Colors ────────────────────────────────────────── */
+    --color-primary:   #006AA3;  /* Medium blue - cards, borders, glows */
+    --color-secondary: #3C438A;  /* Indigo/purple - gradients */
+    --color-red:       #E5202E;  /* OL red - navbar, active states, CTAs */
+    --color-white:     #ffffff;
+    --color-black:     #000000;
+
+    /* ── Typography ──────────────────────────────────────────── */
+    --font-primary:   'Montserrat', sans-serif;
+    --font-secondary: 'Oswald', sans-serif;
+
+    /* ── Breakpoints ─────────────────────────────────────────── */
+    --breakpoint-mobile: 768px;
+    --breakpoint-tablet: 900px;
+
+    /* ── Transitions ─────────────────────────────────────────── */
+    --transition-fast:   0.25s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow:   0.5s ease;
+
+    /* ── Shadows ─────────────────────────────────────────────── */
+    --shadow-blue-sm:  0 0 10px rgba(0, 106, 163, 0.25);
+    --shadow-blue-md:  0 0 20px rgba(0, 106, 163, 0.55), 0 0 45px rgba(0, 106, 163, 0.25);
+    --shadow-blue-lg:  0 8px 32px rgba(0, 106, 163, 0.45);
+    --shadow-red-sm:   0 0 14px rgba(229, 32, 46, 0.4);
+    --shadow-red-md:   0 0 20px rgba(229, 32, 46, 0.55), 0 0 45px rgba(229, 32, 46, 0.25);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S'abonner à OLPLAY — Olympique Lyonnais</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/subscribe.css">
+</head>
+<body>
+
+    <!-- ── Navbar ─────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <a href="main.html" class="nav-logo" aria-label="Accueil OLPLAY">
+            <svg viewBox="0 0 4395.89 861.47" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#E5202E" fill-rule="evenodd" d="m455.69,0C198.49,0,0,174.79,0,430.73s198.49,430.74,455.69,430.74,455.69-174.79,455.69-430.74S712.88,0,455.69,0Zm0,639.22c-121.12,0-199.75-92.4-199.75-208.49s78.63-208.48,199.75-208.48,199.75,92.39,199.75,208.48-78.63,208.49-199.75,208.49ZM4147.18,13.76l-101.31,274.92-101.35-274.92h-248.57l225.63,612-81.39,220.68h249.6L4395.89,13.76h-248.71Zm-3208.34-.06h252.17v613.07h315.9v219.67h-568.07V13.7Zm1051.15,0h-444.44v832.74h252.17v-262.16h192.27c194.78,0,299.62-129.85,299.62-284.66S2184.77,13.7,1989.99,13.7Zm-32.43,350.84h-159.84v-131.11h159.84c42.43,0,76.18,21.24,76.18,66.18s-33.69,64.93-76.18,64.93Zm920.11,478.44L3183.51,13.7h317.09l307.23,832.74h-285.9l-29.98-97.36h-299.63l-29.98,97.36h-852.67V13.7h252.17v613.01h315.83v216.28Zm464.42-582.08l-82.4,268.44h164.8l-82.4-268.44Z"/>
+            </svg>
+        </a>
+        <button class="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-menu">
+            <ul class="nav-sections">
+                <li class="nav-item"><a href="matchs.html">Matchs</a></li>
+                <li class="nav-item"><a href="resumes.html">Résumés</a></li>
+                <li class="nav-item"><a href="grandformat.html">Grand Format</a></li>
+                <li class="nav-item"><a href="player.html" class="nav-live-link">LE LIVE</a></li>
+                <li class="nav-item"><a href="avantmatch.html">Avant match</a></li>
+                <li class="nav-item"><a href="apres.html">Après match</a></li>
+                <li class="nav-item"><a href="coulisses.html">Coulisses</a></li>
+            </ul>
+            <div class="nav-right">
+                <button class="nav-subscribe">S'abonner</button>
+                <button class="nav-signin">Se connecter</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── Hero ───────────────────────────────────────────────── -->
+    <section class="sub-hero">
+        <div class="sub-hero-inner">
+            <span class="sub-eyebrow">Abonnement OLPLAY</span>
+            <h1 class="sub-hero-title">Vivez l'OL <span>sans limite</span></h1>
+            <p class="sub-hero-subtitle">
+                Matchs complets, résumés, coulisses exclusives — accédez à tout le
+                contenu vidéo de l'Olympique Lyonnais, où que vous soyez.
+            </p>
+        </div>
+    </section>
+
+    <!-- ── Plans ──────────────────────────────────────────────── -->
+    <section class="plans-section">
+        <div class="plans-header">
+            <h2>Choisissez votre formule</h2>
+            <div class="plans-toggle">
+                <button class="toggle-btn active" data-period="monthly">Mensuel</button>
+                <button class="toggle-btn" data-period="annual">
+                    Annuel <span class="toggle-badge">−20&nbsp;%</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="plans-grid">
+
+            <!-- ── Essentiel ──────────────────────────────────── -->
+            <div class="plan-card" data-plan="essentiel">
+                <div class="plan-name">Essentiel</div>
+                <div class="plan-price">
+                    <span class="plan-amount">5,99</span>
+                    <span class="plan-currency">€</span>
+                    <span class="plan-period">/mois</span>
+                </div>
+                <div class="plan-annual-note"></div>
+                <hr class="plan-divider">
+                <ul class="plan-features">
+                    <li class="plan-feature plan-feature--in">Résumés des matchs</li>
+                    <li class="plan-feature plan-feature--in">Avant &amp; Après match</li>
+                    <li class="plan-feature plan-feature--in">Coulisses</li>
+                    <li class="plan-feature plan-feature--in">1 écran simultané</li>
+                    <li class="plan-feature plan-feature--out">Matchs complets</li>
+                    <li class="plan-feature plan-feature--out">Grand Format</li>
+                    <li class="plan-feature plan-feature--out">Archives complètes</li>
+                </ul>
+                <button class="plan-cta" data-plan="essentiel">Choisir Essentiel</button>
+            </div>
+
+            <!-- ── OLPLAY (featured) ───────────────────────────── -->
+            <div class="plan-card plan-card--featured" data-plan="olplay">
+                <div class="plan-popular">Le plus populaire</div>
+                <div class="plan-name">OLPLAY</div>
+                <div class="plan-price">
+                    <span class="plan-amount">9,99</span>
+                    <span class="plan-currency">€</span>
+                    <span class="plan-period">/mois</span>
+                </div>
+                <div class="plan-annual-note"></div>
+                <hr class="plan-divider">
+                <ul class="plan-features">
+                    <li class="plan-feature plan-feature--in">Tout le contenu Essentiel</li>
+                    <li class="plan-feature plan-feature--in">Matchs complets</li>
+                    <li class="plan-feature plan-feature--in">Grand Format documentaires</li>
+                    <li class="plan-feature plan-feature--in">Archives complètes OL</li>
+                    <li class="plan-feature plan-feature--in">Qualité HD</li>
+                    <li class="plan-feature plan-feature--in">2 écrans simultanés</li>
+                    <li class="plan-feature plan-feature--out">Téléchargements offline</li>
+                </ul>
+                <button class="plan-cta plan-cta--featured" data-plan="olplay">Commencer maintenant</button>
+            </div>
+
+            <!-- ── Famille ────────────────────────────────────── -->
+            <div class="plan-card" data-plan="famille">
+                <div class="plan-name">Famille</div>
+                <div class="plan-price">
+                    <span class="plan-amount">14,99</span>
+                    <span class="plan-currency">€</span>
+                    <span class="plan-period">/mois</span>
+                </div>
+                <div class="plan-annual-note"></div>
+                <hr class="plan-divider">
+                <ul class="plan-features">
+                    <li class="plan-feature plan-feature--in">Tout le contenu OLPLAY</li>
+                    <li class="plan-feature plan-feature--in">4 écrans simultanés</li>
+                    <li class="plan-feature plan-feature--in">Téléchargements offline</li>
+                    <li class="plan-feature plan-feature--in">Comptes enfants</li>
+                </ul>
+                <button class="plan-cta" data-plan="famille">Choisir Famille</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ── Checkout ───────────────────────────────────────────── -->
+    <section class="checkout-section" id="checkout">
+        <hr class="checkout-separator">
+        <h2 class="checkout-heading">Finaliser votre abonnement</h2>
+
+        <div class="checkout-inner">
+
+            <!-- Order summary -->
+            <div class="checkout-summary">
+                <div class="checkout-summary-label">Votre abonnement</div>
+                <div class="checkout-summary-plan">OLPLAY</div>
+                <div class="checkout-summary-price">
+                    <span class="price-amount">9,99&nbsp;€</span>
+                    <span class="price-period">/mois</span>
+                </div>
+                <hr class="checkout-summary-divider">
+                <ul class="checkout-summary-features">
+                    <li class="checkout-summary-feature">Tout le contenu Essentiel</li>
+                    <li class="checkout-summary-feature">Matchs complets</li>
+                    <li class="checkout-summary-feature">Grand Format documentaires</li>
+                    <li class="checkout-summary-feature">Archives complètes OL</li>
+                    <li class="checkout-summary-feature">Qualité HD</li>
+                    <li class="checkout-summary-feature">2 écrans simultanés</li>
+                </ul>
+                <button class="checkout-change-plan">Changer de formule</button>
+            </div>
+
+            <!-- Payment form -->
+            <div class="checkout-form-wrap">
+                <h3 class="checkout-title">Informations de paiement</h3>
+
+                <form class="checkout-form" id="checkout-form" novalidate>
+
+                    <div class="form-field">
+                        <label for="card-name">Nom sur la carte</label>
+                        <input
+                            class="form-input"
+                            type="text"
+                            id="card-name"
+                            placeholder="JEAN DUPONT"
+                            autocomplete="cc-name"
+                        >
+                    </div>
+
+                    <div class="form-field">
+                        <label for="card-number">Numéro de carte</label>
+                        <div class="card-input-wrap">
+                            <input
+                                class="form-input"
+                                type="text"
+                                id="card-number"
+                                placeholder="0000&nbsp;0000&nbsp;0000&nbsp;0000"
+                                inputmode="numeric"
+                                autocomplete="cc-number"
+                                maxlength="19"
+                            >
+                            <div class="card-type-icons">
+                                <div class="card-icon visa">VISA</div>
+                                <div class="card-icon mc">MC</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="card-expiry">Date d'expiration</label>
+                            <input
+                                class="form-input"
+                                type="text"
+                                id="card-expiry"
+                                placeholder="MM / AA"
+                                inputmode="numeric"
+                                autocomplete="cc-exp"
+                                maxlength="7"
+                            >
+                        </div>
+                        <div class="form-field">
+                            <label for="card-cvv">CVV</label>
+                            <input
+                                class="form-input"
+                                type="text"
+                                id="card-cvv"
+                                placeholder="123"
+                                inputmode="numeric"
+                                autocomplete="cc-csc"
+                                maxlength="4"
+                            >
+                        </div>
+                    </div>
+
+                    <button type="submit" class="checkout-submit">
+                        Confirmer — 9,99&nbsp;€/mois
+                    </button>
+                    <p class="checkout-legal">
+                        Sans engagement · Résiliable à tout moment · Paiement sécurisé
+                    </p>
+
+                </form>
+
+                <!-- Success state (hidden until submit) -->
+                <div class="checkout-success" id="checkout-success">
+                    <div class="success-icon">✓</div>
+                    <h2 class="success-title">Bienvenue sur OLPLAY&nbsp;!</h2>
+                    <p class="success-subtitle">
+                        Votre abonnement est actif. Profitez de tout le contenu de<br>
+                        l'Olympique Lyonnais, où que vous soyez.
+                    </p>
+                    <a href="main.html" class="success-btn">Explorer le contenu</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── FAQ ────────────────────────────────────────────────── -->
+    <section class="faq-section">
+        <div class="faq-inner">
+            <h2>Questions fréquentes</h2>
+            <div class="faq-list">
+
+                <div class="faq-item">
+                    <button class="faq-question">Puis-je résilier à tout moment ?</button>
+                    <div class="faq-answer">
+                        <p>Oui, vous pouvez résilier votre abonnement à tout moment depuis votre espace compte, sans frais ni pénalité. L'accès reste actif jusqu'à la fin de la période déjà facturée.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Sur combien d'appareils puis-je regarder OLPLAY ?</button>
+                    <div class="faq-answer">
+                        <p>Cela dépend de votre formule : Essentiel permet 1 écran simultané, OLPLAY en permet 2, et Famille jusqu'à 4. OLPLAY est compatible TV, ordinateur, tablette et smartphone.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Quelle est la différence entre l'offre mensuelle et annuelle ?</button>
+                    <div class="faq-answer">
+                        <p>Le contenu est identique. L'offre annuelle est facturée en une fois et vous permet d'économiser 20&nbsp;% par rapport à 12 mois d'abonnement mensuel. Elle est idéale si vous suivez l'OL toute la saison.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Puis-je regarder les matchs en direct ?</button>
+                    <div class="faq-answer">
+                        <p>OLPLAY propose des replays intégraux, des résumés et des contenus exclusifs en coulisses. Pour les diffusions en direct, consultez l'onglet LE LIVE disponible lors des jours de match.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">Comment fonctionne l'offre Famille ?</button>
+                    <div class="faq-answer">
+                        <p>L'offre Famille permet à jusqu'à 4 membres du foyer de se connecter simultanément avec leurs propres profils. Elle inclut également des téléchargements offline et des comptes adaptés aux enfants.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ── Footer ─────────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-grid">
+                <!-- Logo & Description -->
+                <div class="footer-col footer-logo-section">
+                    <div class="footer-logo">
+                        <svg viewBox="0 0 4395.89 861.47" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#E5202E" fill-rule="evenodd" d="m455.69,0C198.49,0,0,174.79,0,430.73s198.49,430.74,455.69,430.74,455.69-174.79,455.69-430.74S712.88,0,455.69,0Zm0,639.22c-121.12,0-199.75-92.4-199.75-208.49s78.63-208.48,199.75-208.48,199.75,92.39,199.75,208.48-78.63,208.49-199.75,208.49ZM4147.18,13.76l-101.31,274.92-101.35-274.92h-248.57l225.63,612-81.39,220.68h249.6L4395.89,13.76h-248.71Zm-3208.34-.06h252.17v613.07h315.9v219.67h-568.07V13.7Zm1051.15,0h-444.44v832.74h252.17v-262.16h192.27c194.78,0,299.62-129.85,299.62-284.66S2184.77,13.7,1989.99,13.7Zm-32.43,350.84h-159.84v-131.11h159.84c42.43,0,76.18,21.24,76.18,66.18s-33.69,64.93-76.18,64.93Zm920.11,478.44L3183.51,13.7h317.09l307.23,832.74h-285.9l-29.98-97.36h-299.63l-29.98,97.36h-852.67V13.7h252.17v613.01h315.83v216.28Zm464.42-582.08l-82.4,268.44h164.8l-82.4-268.44Z"/>
+                        </svg>
+                    </div>
+                    <p class="footer-desc">Regardez tous les matchs, résumés et contenus exclusifs de l'Olympique Lyonnais en HD sur tous vos appareils.</p>
+                </div>
+
+                <!-- OLPLAY Links -->
+                <div class="footer-col">
+                    <h4>OLPLAY</h4>
+                    <ul>
+                        <li><a href="main.html">Accueil</a></li>
+                        <li><a href="matchs.html">Matchs</a></li>
+                        <li><a href="#">À propos</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Links -->
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="footer-col">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Cookies</a></li>
+                        <li><a href="#">Mentions légales</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">© 2026 Olympique Lyonnais. Tous droits réservés.</div>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social-link">Twitter</a>
+                    <a href="#" class="footer-social-link">Instagram</a>
+                    <a href="#" class="footer-social-link">Facebook</a>
+                    <a href="#" class="footer-social-link">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/components/navbar.js"></script>
+    <script src="js/subscribe.js"></script>
+    <script src="js/cursor.js"></script>
+
+</body>
+</html>
