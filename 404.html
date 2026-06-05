@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page introuvable — OLPLAY</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        /* ── 404 Page Layout ─────────────────────────────── */
+        .error-page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            min-height: calc(100vh - 200px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* ── Pitch lines background ──────────────────────── */
+        .error-page::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 300px;
+            border: 2px solid rgba(0, 106, 163, 0.1);
+            border-radius: 0;
+            pointer-events: none;
+        }
+
+        .error-page::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(0, 106, 163, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* ── 404 Number ──────────────────────────────────── */
+        .error-code {
+            font-family: var(--font-secondary);
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-title {
+            font-family: var(--font-secondary);
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 600;
+            color: var(--color-white);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-subtitle {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            max-width: 420px;
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── Footballer Animation Container ──────────────── */
+        .footballer-scene {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin-bottom: 2.5rem;
+            z-index: 2;
+        }
+
+        /* ── Grass line ──────────────────────────────────── */
+        .grass {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, rgba(0, 106, 163, 0.3) 20%, rgba(0, 106, 163, 0.3) 80%, transparent 100%);
+        }
+
+        /* ── Player body (SVG stick figure) ──────────────── */
+        .player {
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-70%);
+            width: 80px;
+            height: 140px;
+        }
+
+        /* Head */
+        .player-head {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--color-white);
+            animation: playerBob 1.8s ease-in-out infinite;
+        }
+
+        /* Torso */
+        .player-torso {
+            position: absolute;
+            top: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 50px;
+            background: var(--color-red);
+            border-radius: 2px;
+        }
+
+        /* Arms */
+        .player-arm-left,
+        .player-arm-right {
+            position: absolute;
+            top: 30px;
+            width: 4px;
+            height: 35px;
+            background: var(--color-white);
+            border-radius: 2px;
+            transform-origin: top center;
+        }
+
+        .player-arm-left {
+            left: calc(50% - 6px);
+            animation: armSwingLeft 1.8s ease-in-out infinite;
+        }
+
+        .player-arm-right {
+            left: calc(50% + 2px);
+            animation: armSwingRight 1.8s ease-in-out infinite;
+        }
+
+        /* Legs */
+        .player-leg-left,
+        .player-leg-right {
+            position: absolute;
+            top: 72px;
+            width: 4px;
+            height: 45px;
+            background: var(--color-primary);
+            border-radius: 2px;
+            transform-origin: top center;
+        }
+
+        .player-leg-left {
+            left: calc(50% - 6px);
+            animation: legSwingLeft 1.8s ease-in-out infinite;
+        }
+
+        .player-leg-right {
+            left: calc(50% + 2px);
+            animation: legKick 1.8s ease-in-out infinite;
+        }
+
+        /* ── Football (ball) ─────────────────────────────── */
+        .football {
+            position: absolute;
+            bottom: 12px;
+            left: calc(50% + 10px);
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(circle at 35% 35%, #ffffff, #cccccc);
+            border-radius: 50%;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            animation: ballKick 1.8s ease-in-out infinite;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Pentagon pattern on ball */
+        .football::before {
+            content: '⬠';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8px;
+            color: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Ball shadow */
+        .ball-shadow {
+            position: absolute;
+            bottom: 6px;
+            left: calc(50% + 14px);
+            width: 16px;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            animation: ballShadow 1.8s ease-in-out infinite;
+        }
+
+        /* ── Player shadow ───────────────────────────────── */
+        .player-shadow {
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-70%);
+            width: 50px;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 50%;
+            animation: playerShadow 1.8s ease-in-out infinite;
+        }
+
+        /* ── Keyframe Animations ─────────────────────────── */
+        @keyframes playerBob {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            25%      { transform: translateX(-50%) translateY(-3px); }
+            50%      { transform: translateX(-50%) translateY(0); }
+            75%      { transform: translateX(-50%) translateY(-2px); }
+        }
+
+        @keyframes legKick {
+            0%   { transform: rotate(0deg); }
+            30%  { transform: rotate(-35deg); }
+            45%  { transform: rotate(50deg); }
+            60%  { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes legSwingLeft {
+            0%   { transform: rotate(0deg); }
+            30%  { transform: rotate(15deg); }
+            45%  { transform: rotate(-15deg); }
+            60%  { transform: rotate(5deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes armSwingLeft {
+            0%   { transform: rotate(10deg); }
+            30%  { transform: rotate(-20deg); }
+            50%  { transform: rotate(15deg); }
+            100% { transform: rotate(10deg); }
+        }
+
+        @keyframes armSwingRight {
+            0%   { transform: rotate(-10deg); }
+            30%  { transform: rotate(25deg); }
+            50%  { transform: rotate(-10deg); }
+            100% { transform: rotate(-10deg); }
+        }
+
+        @keyframes ballKick {
+            0%   { transform: translate(0, 0)   scale(1);   opacity: 1; }
+            35%  { transform: translate(0, 0)   scale(1);   opacity: 1; }
+            45%  { transform: translate(30px, -40px) scale(0.9); opacity: 1; }
+            60%  { transform: translate(60px, -10px) scale(1);   opacity: 1; }
+            70%  { transform: translate(70px, 0)  scale(1);   opacity: 1; }
+            80%  { transform: translate(72px, -8px)  scale(1);   opacity: 0.9; }
+            90%  { transform: translate(74px, 0)  scale(1);   opacity: 0.6; }
+            95%  { transform: translate(75px, 0)  scale(1);   opacity: 0.3; }
+            100% { transform: translate(0, 0)   scale(1);   opacity: 1; }
+        }
+
+        @keyframes ballShadow {
+            0%   { transform: translateX(0)   scale(1);   opacity: 0.2; }
+            35%  { transform: translateX(0)   scale(1);   opacity: 0.2; }
+            45%  { transform: translateX(30px) scale(0.6); opacity: 0.1; }
+            60%  { transform: translateX(60px) scale(1);   opacity: 0.2; }
+            70%  { transform: translateX(70px) scale(1);   opacity: 0.2; }
+            90%  { transform: translateX(74px) scale(1);   opacity: 0.1; }
+            100% { transform: translateX(0)   scale(1);   opacity: 0.2; }
+        }
+
+        @keyframes playerShadow {
+            0%, 100% { transform: translateX(-70%) scaleX(1); }
+            45%      { transform: translateX(-70%) scaleX(0.9); }
+        }
+
+        /* ── CTA Button ──────────────────────────────────── */
+        .error-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-red);
+            color: var(--color-white);
+            text-decoration: none;
+            font-family: var(--font-primary);
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 0.9rem 2rem;
+            border: none;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: background var(--transition-normal),
+                        transform var(--transition-normal),
+                        box-shadow var(--transition-normal);
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-cta:hover {
+            background: #ff3344;
+            transform: scale(1.05);
+            box-shadow: var(--shadow-red-md);
+        }
+
+        .error-cta svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* ── Secondary link ──────────────────────────────── */
+        .error-links {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .error-link {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color var(--transition-normal);
+        }
+
+        .error-link:hover {
+            color: var(--color-primary);
+        }
+
+        /* ── Responsive ──────────────────────────────────── */
+        @media (max-width: 768px) {
+            .footballer-scene {
+                width: 250px;
+                height: 160px;
+                margin-bottom: 2rem;
+            }
+
+            .player {
+                width: 60px;
+                height: 110px;
+            }
+
+            .player-head {
+                width: 18px;
+                height: 18px;
+            }
+
+            .player-torso { height: 38px; top: 18px; }
+            .player-arm-left, .player-arm-right { top: 22px; height: 28px; }
+            .player-leg-left, .player-leg-right { top: 55px; height: 38px; }
+            .football { width: 16px; height: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ── Navbar ─────────────────────────────────────────────── -->
+    <nav class="navbar">
+        <a href="main.html" class="nav-logo" aria-label="Accueil OLPLAY">
+            <svg viewBox="0 0 4395.89 861.47" xmlns="http://www.w3.org/2000/svg">
+                <path fill="#E5202E" fill-rule="evenodd" d="m455.69,0C198.49,0,0,174.79,0,430.73s198.49,430.74,455.69,430.74,455.69-174.79,455.69-430.74S712.88,0,455.69,0Zm0,639.22c-121.12,0-199.75-92.4-199.75-208.49s78.63-208.48,199.75-208.48,199.75,92.39,199.75,208.48-78.63,208.49-199.75,208.49ZM4147.18,13.76l-101.31,274.92-101.35-274.92h-248.57l225.63,612-81.39,220.68h249.6L4395.89,13.76h-248.71Zm-3208.34-.06h252.17v613.07h315.9v219.67h-568.07V13.7Zm1051.15,0h-444.44v832.74h252.17v-262.16h192.27c194.78,0,299.62-129.85,299.62-284.66S2184.77,13.7,1989.99,13.7Zm-32.43,350.84h-159.84v-131.11h159.84c42.43,0,76.18,21.24,76.18,66.18s-33.69,64.93-76.18,64.93Zm920.11,478.44L3183.51,13.7h317.09l307.23,832.74h-285.9l-29.98-97.36h-299.63l-29.98,97.36h-852.67V13.7h252.17v613.01h315.83v216.28Zm464.42-582.08l-82.4,268.44h164.8l-82.4-268.44Z"/>
+            </svg>
+        </a>
+        <button class="hamburger" aria-label="Menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="nav-menu">
+            <ul class="nav-sections">
+                <li class="nav-item"><a href="matchs.html">Matches</a></li>
+                <li class="nav-item"><a href="resumes.html">Résumés</a></li>
+                <li class="nav-item"><a href="grandformat.html">Grand Format</a></li>
+                <li class="nav-item"><a href="player.html" class="nav-live-link">LE LIVE</a></li>
+                <li class="nav-item"><a href="avantmatch.html">Avant match</a></li>
+                <li class="nav-item"><a href="apres.html">Après match</a></li>
+                <li class="nav-item"><a href="coulisses.html">Coulisses</a></li>
+            </ul>
+            <div class="nav-right">
+                <button class="nav-subscribe">S'abonner</button>
+                <button class="nav-signin">Se connecter</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ── 404 Content ──────────────────────────────────────── -->
+    <main class="error-page">
+
+        <!-- Footballer animation -->
+        <div class="footballer-scene">
+            <div class="player">
+                <div class="player-head"></div>
+                <div class="player-torso"></div>
+                <div class="player-arm-left"></div>
+                <div class="player-arm-right"></div>
+                <div class="player-leg-left"></div>
+                <div class="player-leg-right"></div>
+            </div>
+            <div class="football"></div>
+            <div class="ball-shadow"></div>
+            <div class="player-shadow"></div>
+            <div class="grass"></div>
+        </div>
+
+        <div class="error-code">404</div>
+        <h1 class="error-title">Hors-jeu !</h1>
+        <p class="error-subtitle">
+            Cette page a quitté le terrain. Retournez sur le banc pour retrouver 
+            le contenu que vous cherchez.
+        </p>
+        <a href="main.html" class="error-cta">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+            Retour à l'accueil
+        </a>
+        <div class="error-links">
+            <a href="matchs.html" class="error-link">Matches</a>
+            <a href="subscribe.html" class="error-link">S'abonner</a>
+            <a href="player.html" class="error-link">LE LIVE</a>
+        </div>
+    </main>
+
+    <!-- ── Footer ─────────────────────────────────────────────── -->
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-grid">
+                <!-- Logo & Description -->
+                <div class="footer-col footer-logo-section">
+                    <div class="footer-logo">
+                        <svg viewBox="0 0 4395.89 861.47" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#E5202E" fill-rule="evenodd" d="m455.69,0C198.49,0,0,174.79,0,430.73s198.49,430.74,455.69,430.74,455.69-174.79,455.69-430.74S712.88,0,455.69,0Zm0,639.22c-121.12,0-199.75-92.4-199.75-208.49s78.63-208.48,199.75-208.48,199.75,92.39,199.75,208.48-78.63,208.49-199.75,208.49ZM4147.18,13.76l-101.31,274.92-101.35-274.92h-248.57l225.63,612-81.39,220.68h249.6L4395.89,13.76h-248.71Zm-3208.34-.06h252.17v613.07h315.9v219.67h-568.07V13.7Zm1051.15,0h-444.44v832.74h252.17v-262.16h192.27c194.78,0,299.62-129.85,299.62-284.66S2184.77,13.7,1989.99,13.7Zm-32.43,350.84h-159.84v-131.11h159.84c42.43,0,76.18,21.24,76.18,66.18s-33.69,64.93-76.18,64.93Zm920.11,478.44L3183.51,13.7h317.09l307.23,832.74h-285.9l-29.98-97.36h-299.63l-29.98,97.36h-852.67V13.7h252.17v613.01h315.83v216.28Zm464.42-582.08l-82.4,268.44h164.8l-82.4-268.44Z"/>
+                        </svg>
+                    </div>
+                    <p class="footer-desc">Regardez tous les matchs, résumés et contenus exclusifs de l'Olympique Lyonnais en HD sur tous vos appareils.</p>
+                </div>
+
+                <!-- OLPLAY Links -->
+                <div class="footer-col">
+                    <h4>OLPLAY</h4>
+                    <ul>
+                        <li><a href="main.html">Accueil</a></li>
+                        <li><a href="matchs.html">Matchs</a></li>
+                        <li><a href="#">À propos</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Links -->
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Centre d'aide</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal Links -->
+                <div class="footer-col">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#">Conditions d'utilisation</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                        <li><a href="#">Cookies</a></li>
+                        <li><a href="#">Mentions légales</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-divider"></div>
+
+            <div class="footer-bottom">
+                <div class="footer-copy">© 2026 Olympique Lyonnais. Tous droits réservés.</div>
+                <div class="footer-socials">
+                    <a href="#" class="footer-social-link">Twitter</a>
+                    <a href="#" class="footer-social-link">Instagram</a>
+                    <a href="#" class="footer-social-link">Facebook</a>
+                    <a href="#" class="footer-social-link">YouTube</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/components/navbar.js"></script>
+    <script src="js/cursor.js"></script>
+
+</body>
+</html>

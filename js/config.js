@@ -15,4 +15,5 @@ const ROUTES = {
     player:    'player.html',
     subscribe: 'subscribe.html',
     matchs:    'matchs.html',
+    notFound:  '404.html',
 };

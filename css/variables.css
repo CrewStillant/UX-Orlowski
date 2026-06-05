@@ -38,3 +38,14 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+/* ─── Text Selection (OL brand colors) ───────────────────────── */
+::selection {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+::-moz-selection {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
