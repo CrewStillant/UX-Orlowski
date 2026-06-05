@@ -42,10 +42,10 @@
 /* ─── Text Selection (OL brand colors) ───────────────────────── */
 ::selection {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-red);
 }
 
 ::-moz-selection {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-red);
 }
