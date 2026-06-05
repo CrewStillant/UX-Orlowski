@@ -7,6 +7,15 @@ function initNavbar() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu   = document.querySelector('.nav-menu');
 
+    // Highlight active nav item based on current page
+    const currentPage = window.location.pathname.split('/').pop() || 'main.html';
+    document.querySelectorAll('.nav-item a').forEach(link => {
+        const linkPage = link.getAttribute('href');
+        if (linkPage && linkPage === currentPage) {
+            link.closest('.nav-item').classList.add('active');
+        }
+    });
+
     if (hamburger && navMenu) {
         // Toggle hamburger menu
         hamburger.addEventListener('click', function () {
