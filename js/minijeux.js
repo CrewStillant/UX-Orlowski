@@ -3,11 +3,10 @@
 //  Build your historic OL XI in 4-3-3 and simulate Ligue 1 2026-27
 // =====================================================================
 
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
     'use strict';
 
     // ─── OL Historic Players Database ──────────────────────────────
-    // Each player: { name, years, rating (1-99, overall quality estimate) }
     const OL_PLAYERS = {
         GK: [
             { name: 'Grégory Coupet', years: '1997–2008', rating: 90 },
@@ -32,7 +31,6 @@
             { name: 'Christophe Jallet', years: '2014–2017', rating: 76 },
             { name: 'Rafael', years: '2015–2020', rating: 77 },
             { name: 'Serge Aurier', years: '2012–2014', rating: 76 },
-            { name: 'Milan Baroš', years: '2005–2007', rating: 72 },
             { name: 'Claudio Caçapa', years: '2000–2007', rating: 82 },
             { name: 'Anthony Réveillère', years: '2003–2013', rating: 79 },
             { name: 'Patrick Müller', years: '2003–2006', rating: 74 },
@@ -81,7 +79,6 @@
             { name: 'Clinton Njié', years: '2013–2015', rating: 72 },
             { name: 'Bertrand Traoré', years: '2017–2020', rating: 76 },
             { name: 'Karl Toko Ekambi', years: '2020–2023', rating: 75 },
-            { name: 'Éric Carrière', years: '2002–2004', rating: 77 },
         ],
     };
 
@@ -106,27 +103,35 @@
         { name: 'Saint-Étienne',    strength: 67 },
     ];
 
-    // ─── State ─────────────────────────────────────────────────────
-    const FORMATION = [
-        { row: 'gk',  position: 'GK',  label: 'GB',  count: 1 },
-        { row: 'def', position: 'DEF', label: 'DC',  count: 4 },
-        { row: 'mid', position: 'MID', label: 'MC',  count: 3 },
-        { row: 'att', position: 'ATT', label: 'AT',  count: 3 },
+    // ─── Formation positions (4-3-3) with absolute positions on pitch ──
+    // Positions are in % from top-left of the pitch container
+    const SLOTS = [
+        // ATT row (3) — top of pitch = attacking end
+        { id: 'slot-ATT-0', pos: 'ATT', label: 'AG', top: 14, left: 20 },
+        { id: 'slot-ATT-1', pos: 'ATT', label: 'BU', top: 10, left: 50 },
+        { id: 'slot-ATT-2', pos: 'ATT', label: 'AD', top: 14, left: 80 },
+        // MID row (3)
+        { id: 'slot-MID-0', pos: 'MID', label: 'MG', top: 38, left: 22 },
+        { id: 'slot-MID-1', pos: 'MID', label: 'MC', top: 34, left: 50 },
+        { id: 'slot-MID-2', pos: 'MID', label: 'MD', top: 38, left: 78 },
+        // DEF row (4)
+        { id: 'slot-DEF-0', pos: 'DEF', label: 'AG', top: 62, left: 14 },
+        { id: 'slot-DEF-1', pos: 'DEF', label: 'DC', top: 60, left: 38 },
+        { id: 'slot-DEF-2', pos: 'DEF', label: 'DC', top: 60, left: 62 },
+        { id: 'slot-DEF-3', pos: 'DEF', label: 'AD', top: 62, left: 86 },
+        // GK row (1)
+        { id: 'slot-GK-0',  pos: 'GK',  label: 'GB', top: 84, left: 50 },
     ];
 
-    const posLabels = {
-        GK:  ['GB'],
-        DEF: ['AG', 'DC', 'DC', 'AD'],
-        MID: ['MC', 'MC', 'MC'],
-        ATT: ['AG', 'AV', 'AD'],
-    };
-
-    let selectedPlayers = {};  // slotId -> player
-    let slotChoices = {};      // slotId -> [5 players]
     const TOTAL_SLOTS = 11;
 
-    // ─── DOM References ────────────────────────────────────────────
-    const pitch        = document.getElementById('pitch');
+    // ─── State ─────────────────────────────────────────────────────
+    let selectedPlayers = {};
+    let slotChoices = {};
+    let currentSlotId = null;
+
+    // ─── DOM References (safe — inside DOMContentLoaded) ───────────
+    const pitchEl      = document.getElementById('pitch');
     const modal        = document.getElementById('player-modal-overlay');
     const modalTitle   = document.getElementById('modal-title');
     const modalBadge   = document.getElementById('modal-position-badge');
@@ -134,66 +139,66 @@
     const confirmBtn   = document.getElementById('confirm-btn');
     const resetBtn     = document.getElementById('reset-btn');
     const simOverlay   = document.getElementById('simulation-overlay');
-
-    let currentSlotId = null;
+    const modalCloseBtn = document.getElementById('modal-close');
 
     // ─── Init ──────────────────────────────────────────────────────
-    function init() {
-        buildFormation();
-        confirmBtn.addEventListener('click', startSimulation);
-        resetBtn.addEventListener('click', resetGame);
-        document.getElementById('modal-close').addEventListener('click', closeModal);
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-    }
+    buildPitchSlots();
+    confirmBtn.addEventListener('click', startSimulation);
+    resetBtn.addEventListener('click', resetGame);
+    modalCloseBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+    });
 
-    // ─── Build Formation on Pitch ──────────────────────────────────
-    function buildFormation() {
-        // Clear pitch rows (keep markings)
-        pitch.querySelectorAll('.formation-row').forEach(r => r.remove());
+    // ─── Build Player Slots on Pitch ──────────────────────────────
+    function buildPitchSlots() {
+        SLOTS.forEach(function (s) {
+            var slot = document.createElement('div');
+            slot.className = 'player-slot';
+            slot.id = s.id;
+            slot.style.position = 'absolute';
+            slot.style.top = s.top + '%';
+            slot.style.left = s.left + '%';
+            slot.style.transform = 'translate(-50%, -50%)';
+            slot.dataset.position = s.pos;
+            slot.dataset.label = s.label;
 
-        let slotIndex = 0;
-        FORMATION.forEach(({ row, position, count }) => {
-            const rowDiv = document.createElement('div');
-            rowDiv.className = `formation-row row-${row}`;
+            slot.innerHTML =
+                '<div class="slot-circle">' +
+                '  <span class="slot-icon">+</span>' +
+                '  <span class="slot-jersey">🔴</span>' +
+                '</div>' +
+                '<span class="slot-label">' + s.label + '</span>' +
+                '<span class="slot-player-name"></span>';
 
-            for (let i = 0; i < count; i++) {
-                const slotId = `slot-${position}-${i}`;
-                const label = posLabels[position][i] || position;
+            slot.addEventListener('click', function () {
+                openModal(s.id, s.pos, s.label);
+            });
 
-                const slot = document.createElement('div');
-                slot.className = 'player-slot';
-                slot.id = slotId;
-                slot.dataset.position = position;
-                slot.dataset.index = i;
-                slot.innerHTML = `
-                    <div class="slot-circle">
-                        <span class="slot-icon">+</span>
-                        <span class="slot-jersey">🔴</span>
-                    </div>
-                    <span class="slot-label">${label}</span>
-                    <span class="slot-player-name"></span>
-                `;
-                slot.addEventListener('click', () => openModal(slotId, position, label));
-                rowDiv.appendChild(slot);
-                slotIndex++;
-            }
-            pitch.appendChild(rowDiv);
+            pitchEl.appendChild(slot);
         });
     }
 
     // ─── Random Pick 5 Unique Players ──────────────────────────────
-    function pickRandomPlayers(position, count = 5) {
-        const pool = [...OL_PLAYERS[position]];
-        // Remove already selected players in other slots of same position
-        const usedNames = Object.entries(selectedPlayers)
-            .filter(([sid]) => sid.startsWith(`slot-${position}`))
-            .map(([, p]) => p.name);
-
-        const available = pool.filter(p => !usedNames.includes(p.name));
-        const shuffled = available.sort(() => Math.random() - 0.5);
-        return shuffled.slice(0, Math.min(count, shuffled.length));
+    function pickRandomPlayers(position) {
+        var pool = OL_PLAYERS[position].slice();
+        var usedNames = [];
+        Object.keys(selectedPlayers).forEach(function (sid) {
+            if (sid.indexOf('slot-' + position) === 0) {
+                usedNames.push(selectedPlayers[sid].name);
+            }
+        });
+        var available = pool.filter(function (p) {
+            return usedNames.indexOf(p.name) === -1;
+        });
+        // Shuffle
+        for (var i = available.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = available[i];
+            available[i] = available[j];
+            available[j] = tmp;
+        }
+        return available.slice(0, Math.min(5, available.length));
     }
 
     // ─── Modal ─────────────────────────────────────────────────────
@@ -202,7 +207,6 @@
         modalTitle.textContent = 'Choisissez un joueur';
         modalBadge.textContent = label;
 
-        // Generate 5 choices (or use existing if slot was already opened)
         if (!slotChoices[slotId] || selectedPlayers[slotId]) {
             slotChoices[slotId] = pickRandomPlayers(position);
         }
@@ -218,40 +222,39 @@
 
     function renderChoices(players) {
         modalChoices.innerHTML = '';
-        players.forEach((player, idx) => {
-            const card = document.createElement('div');
+        players.forEach(function (player, idx) {
+            var card = document.createElement('div');
             card.className = 'player-choice';
-            card.innerHTML = `
-                <div class="player-choice-number">${idx + 1}</div>
-                <div class="player-choice-info">
-                    <div class="player-choice-name">${player.name}</div>
-                    <div class="player-choice-years">${player.years}</div>
-                </div>
-                <div class="player-choice-rating">${player.rating}</div>
-            `;
-            card.addEventListener('click', () => selectPlayer(player));
+            card.innerHTML =
+                '<div class="player-choice-number">' + (idx + 1) + '</div>' +
+                '<div class="player-choice-info">' +
+                '  <div class="player-choice-name">' + player.name + '</div>' +
+                '  <div class="player-choice-years">' + player.years + '</div>' +
+                '</div>' +
+                '<div class="player-choice-rating">' + player.rating + '</div>';
+
+            card.addEventListener('click', function () {
+                selectPlayer(player);
+            });
             modalChoices.appendChild(card);
         });
     }
 
     function selectPlayer(player) {
         selectedPlayers[currentSlotId] = player;
-        const slot = document.getElementById(currentSlotId);
+        var slot = document.getElementById(currentSlotId);
         slot.classList.add('filled');
         slot.querySelector('.slot-player-name').textContent = player.name;
-
         closeModal();
         checkAllFilled();
     }
 
     function checkAllFilled() {
-        const filledCount = Object.keys(selectedPlayers).length;
+        var filledCount = Object.keys(selectedPlayers).length;
         if (filledCount >= TOTAL_SLOTS) {
             confirmBtn.classList.add('visible');
-            resetBtn.classList.add('visible');
-        } else {
-            resetBtn.classList.toggle('visible', filledCount > 0);
         }
+        resetBtn.classList.toggle('visible', filledCount > 0);
     }
 
     function resetGame() {
@@ -259,7 +262,7 @@
         slotChoices = {};
         confirmBtn.classList.remove('visible');
         resetBtn.classList.remove('visible');
-        document.querySelectorAll('.player-slot').forEach(slot => {
+        document.querySelectorAll('.player-slot').forEach(function (slot) {
             slot.classList.remove('filled');
             slot.querySelector('.slot-player-name').textContent = '';
         });
@@ -267,21 +270,20 @@
 
     // ─── Simulation ────────────────────────────────────────────────
     function getTeamStrength() {
-        const ratings = Object.values(selectedPlayers).map(p => p.rating);
-        const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
-        // Scale: avg OL rating 70-92 → team strength 68-90
+        var ratings = Object.keys(selectedPlayers).map(function (k) {
+            return selectedPlayers[k].rating;
+        });
+        var avg = ratings.reduce(function (a, b) { return a + b; }, 0) / ratings.length;
         return Math.round(avg * 0.95 + 5);
     }
 
     function simulateMatch(olStrength, oppStrength, isHome) {
-        const homeBoost = isHome ? 5 : -3;
-        const diff = (olStrength + homeBoost) - oppStrength;
-        // Randomness factor
-        const luck = (Math.random() - 0.5) * 40;
-        const result = diff + luck;
+        var homeBoost = isHome ? 5 : -3;
+        var diff = (olStrength + homeBoost) - oppStrength;
+        var luck = (Math.random() - 0.5) * 40;
+        var result = diff + luck;
 
-        // Generate score
-        let olGoals, oppGoals;
+        var olGoals, oppGoals;
         if (result > 12) {
             olGoals = Math.floor(Math.random() * 3) + 2;
             oppGoals = Math.floor(Math.random() * 2);
@@ -289,9 +291,8 @@
             olGoals = Math.floor(Math.random() * 2) + 1;
             oppGoals = Math.floor(Math.random() * 1);
         } else if (result > -3) {
-            const base = Math.floor(Math.random() * 2);
-            olGoals = base;
-            oppGoals = base;
+            var base = Math.floor(Math.random() * 2);
+            olGoals = base; oppGoals = base;
         } else if (result > -12) {
             olGoals = Math.floor(Math.random() * 1);
             oppGoals = Math.floor(Math.random() * 2) + 1;
@@ -299,22 +300,21 @@
             olGoals = Math.floor(Math.random() * 1);
             oppGoals = Math.floor(Math.random() * 3) + 2;
         }
-
-        return { olGoals, oppGoals };
+        return { olGoals: olGoals, oppGoals: oppGoals };
     }
 
-    async function startSimulation() {
+    function startSimulation() {
         confirmBtn.classList.remove('visible');
         resetBtn.classList.remove('visible');
 
-        const olStrength = getTeamStrength();
-        const feed = document.getElementById('sim-match-feed');
-        const progressFill = document.getElementById('sim-progress-fill');
-        const progressLabel = document.getElementById('sim-progress-label');
-        const statWins = document.getElementById('stat-wins');
-        const statDraws = document.getElementById('stat-draws');
-        const statLosses = document.getElementById('stat-losses');
-        const statPoints = document.getElementById('stat-points');
+        var olStrength = getTeamStrength();
+        var feed = document.getElementById('sim-match-feed');
+        var progressFill = document.getElementById('sim-progress-fill');
+        var progressLabel = document.getElementById('sim-progress-label');
+        var statWins = document.getElementById('stat-wins');
+        var statDraws = document.getElementById('stat-draws');
+        var statLosses = document.getElementById('stat-losses');
+        var statPoints = document.getElementById('stat-points');
 
         feed.innerHTML = '';
         progressFill.style.width = '0%';
@@ -322,117 +322,117 @@
         document.getElementById('sim-standings-wrapper').innerHTML = '';
         simOverlay.classList.add('active');
 
-        // Build full season schedule (home + away for each team = 34 matches)
-        const schedule = [];
-        LIGUE1_TEAMS.forEach(team => {
+        // Build schedule
+        var schedule = [];
+        LIGUE1_TEAMS.forEach(function (team) {
             schedule.push({ opponent: team, isHome: true });
             schedule.push({ opponent: team, isHome: false });
         });
-        // Shuffle schedule
-        schedule.sort(() => Math.random() - 0.5);
+        // Shuffle
+        for (var i = schedule.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var tmp = schedule[i];
+            schedule[i] = schedule[j];
+            schedule[j] = tmp;
+        }
 
-        // Also simulate all other teams vs each other
-        const allTeams = [{ name: 'OL Dream Team', strength: olStrength }, ...LIGUE1_TEAMS];
-        const standings = {};
-        allTeams.forEach(t => {
+        var allTeams = [{ name: 'OL Dream Team', strength: olStrength }].concat(LIGUE1_TEAMS);
+        var standings = {};
+        allTeams.forEach(function (t) {
             standings[t.name] = { played: 0, wins: 0, draws: 0, losses: 0, gf: 0, ga: 0, points: 0 };
         });
 
-        // Simulate OL matches with animation
-        let wins = 0, draws = 0, losses = 0, points = 0;
-        const totalMatches = schedule.length;
+        var wins = 0, draws = 0, losses = 0, points = 0;
+        var matchIdx = 0;
+        var totalMatches = schedule.length;
 
-        for (let i = 0; i < totalMatches; i++) {
-            const { opponent, isHome } = schedule[i];
-            const { olGoals, oppGoals } = simulateMatch(olStrength, opponent.strength, isHome);
+        function playNextMatch() {
+            if (matchIdx >= totalMatches) {
+                simulateOtherMatches(standings);
+                setTimeout(function () { showResult(standings); }, 600);
+                return;
+            }
 
-            // Update OL standings
+            var s = schedule[matchIdx];
+            var res = simulateMatch(olStrength, s.opponent.strength, s.isHome);
+
             standings['OL Dream Team'].played++;
-            standings['OL Dream Team'].gf += olGoals;
-            standings['OL Dream Team'].ga += oppGoals;
-            standings[opponent.name].played++;
-            standings[opponent.name].gf += oppGoals;
-            standings[opponent.name].ga += olGoals;
+            standings['OL Dream Team'].gf += res.olGoals;
+            standings['OL Dream Team'].ga += res.oppGoals;
+            standings[s.opponent.name].played++;
+            standings[s.opponent.name].gf += res.oppGoals;
+            standings[s.opponent.name].ga += res.olGoals;
 
-            let resultType;
-            if (olGoals > oppGoals) {
+            var resultType;
+            if (res.olGoals > res.oppGoals) {
                 wins++; points += 3; resultType = 'win';
                 standings['OL Dream Team'].wins++;
                 standings['OL Dream Team'].points += 3;
-                standings[opponent.name].losses++;
-            } else if (olGoals === oppGoals) {
+                standings[s.opponent.name].losses++;
+            } else if (res.olGoals === res.oppGoals) {
                 draws++; points += 1; resultType = 'draw';
                 standings['OL Dream Team'].draws++;
                 standings['OL Dream Team'].points += 1;
-                standings[opponent.name].draws++;
-                standings[opponent.name].points += 1;
+                standings[s.opponent.name].draws++;
+                standings[s.opponent.name].points += 1;
             } else {
                 losses++; resultType = 'loss';
                 standings['OL Dream Team'].losses++;
-                standings[opponent.name].wins++;
-                standings[opponent.name].points += 3;
+                standings[s.opponent.name].wins++;
+                standings[s.opponent.name].points += 3;
             }
 
-            // Build match line
-            const matchItem = document.createElement('div');
-            matchItem.className = `sim-match-item ${resultType}`;
-            const teamDisplay = isHome
-                ? `OL Dream Team vs ${opponent.name}`
-                : `${opponent.name} vs OL Dream Team`;
-            const scoreDisplay = isHome
-                ? `${olGoals} - ${oppGoals}`
-                : `${oppGoals} - ${olGoals}`;
+            var teamDisplay = s.isHome
+                ? 'OL Dream Team vs ' + s.opponent.name
+                : s.opponent.name + ' vs OL Dream Team';
+            var scoreDisplay = s.isHome
+                ? res.olGoals + ' - ' + res.oppGoals
+                : res.oppGoals + ' - ' + res.olGoals;
 
-            matchItem.innerHTML = `
-                <span class="sim-match-day">J${i + 1}</span>
-                <span class="sim-match-teams">${teamDisplay}</span>
-                <span class="sim-match-score">${scoreDisplay}</span>
-                <span class="sim-match-result-tag">${resultType === 'win' ? 'V' : resultType === 'draw' ? 'N' : 'D'}</span>
-            `;
+            var matchItem = document.createElement('div');
+            matchItem.className = 'sim-match-item ' + resultType;
+            matchItem.innerHTML =
+                '<span class="sim-match-day">J' + (matchIdx + 1) + '</span>' +
+                '<span class="sim-match-teams">' + teamDisplay + '</span>' +
+                '<span class="sim-match-score">' + scoreDisplay + '</span>' +
+                '<span class="sim-match-result-tag">' + (resultType === 'win' ? 'V' : resultType === 'draw' ? 'N' : 'D') + '</span>';
             feed.appendChild(matchItem);
             feed.scrollTop = feed.scrollHeight;
 
-            // Update progress
-            const pct = Math.round(((i + 1) / totalMatches) * 100);
-            progressFill.style.width = `${pct}%`;
-            progressLabel.textContent = `Journée ${i + 1} / ${totalMatches}`;
+            var pct = Math.round(((matchIdx + 1) / totalMatches) * 100);
+            progressFill.style.width = pct + '%';
+            progressLabel.textContent = 'Journée ' + (matchIdx + 1) + ' / ' + totalMatches;
 
-            // Update stats
             statWins.textContent = wins;
             statDraws.textContent = draws;
             statLosses.textContent = losses;
             statPoints.textContent = points;
 
-            await sleep(80);
+            matchIdx++;
+            setTimeout(playNextMatch, 70);
         }
 
-        // Simulate remaining matches between other teams
-        simulateOtherMatches(standings);
-
-        // Show final standings + result
-        await sleep(600);
-        showResult(standings);
+        playNextMatch();
     }
 
     function simulateOtherMatches(standings) {
-        // Each pair of non-OL teams plays home & away
-        for (let i = 0; i < LIGUE1_TEAMS.length; i++) {
-            for (let j = 0; j < LIGUE1_TEAMS.length; j++) {
+        for (var i = 0; i < LIGUE1_TEAMS.length; i++) {
+            for (var j = 0; j < LIGUE1_TEAMS.length; j++) {
                 if (i === j) continue;
-                const home = LIGUE1_TEAMS[i];
-                const away = LIGUE1_TEAMS[j];
+                var home = LIGUE1_TEAMS[i];
+                var away = LIGUE1_TEAMS[j];
 
-                const diff = (home.strength + 4) - away.strength;
-                const luck = (Math.random() - 0.5) * 40;
-                const result = diff + luck;
+                var diff = (home.strength + 4) - away.strength;
+                var luck = (Math.random() - 0.5) * 40;
+                var result = diff + luck;
 
-                let hGoals, aGoals;
+                var hGoals, aGoals;
                 if (result > 12) {
                     hGoals = Math.floor(Math.random() * 3) + 2; aGoals = Math.floor(Math.random() * 2);
                 } else if (result > 3) {
                     hGoals = Math.floor(Math.random() * 2) + 1; aGoals = Math.floor(Math.random() * 1);
                 } else if (result > -3) {
-                    const b = Math.floor(Math.random() * 2); hGoals = b; aGoals = b;
+                    var b = Math.floor(Math.random() * 2); hGoals = b; aGoals = b;
                 } else if (result > -12) {
                     hGoals = Math.floor(Math.random() * 1); aGoals = Math.floor(Math.random() * 2) + 1;
                 } else {
@@ -447,107 +447,91 @@
                 standings[away.name].ga += hGoals;
 
                 if (hGoals > aGoals) {
-                    standings[home.name].wins++;
-                    standings[home.name].points += 3;
+                    standings[home.name].wins++; standings[home.name].points += 3;
                     standings[away.name].losses++;
                 } else if (hGoals === aGoals) {
-                    standings[home.name].draws++;
-                    standings[home.name].points += 1;
-                    standings[away.name].draws++;
-                    standings[away.name].points += 1;
+                    standings[home.name].draws++; standings[home.name].points += 1;
+                    standings[away.name].draws++; standings[away.name].points += 1;
                 } else {
                     standings[home.name].losses++;
-                    standings[away.name].wins++;
-                    standings[away.name].points += 3;
+                    standings[away.name].wins++; standings[away.name].points += 3;
                 }
             }
         }
     }
 
     function showResult(standings) {
-        // Sort standings
-        const sorted = Object.entries(standings)
-            .map(([name, s]) => ({ name, ...s, gd: s.gf - s.ga }))
-            .sort((a, b) => b.points - a.points || b.gd - a.gd || b.gf - a.gf);
-
-        const olRank = sorted.findIndex(t => t.name === 'OL Dream Team') + 1;
-        const olData = sorted.find(t => t.name === 'OL Dream Team');
-
-        // Build standings table
-        const standingsWrapper = document.getElementById('sim-standings-wrapper');
-        let tableHTML = `
-            <div class="sim-standings">
-                <table class="standings-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Équipe</th>
-                            <th>MJ</th>
-                            <th>V</th>
-                            <th>N</th>
-                            <th>D</th>
-                            <th>BP</th>
-                            <th>BC</th>
-                            <th>Diff</th>
-                            <th>Pts</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-
-        sorted.forEach((team, idx) => {
-            const isOL = team.name === 'OL Dream Team';
-            tableHTML += `
-                <tr class="${isOL ? 'team-ol' : ''}">
-                    <td>${idx + 1}</td>
-                    <td>${team.name}</td>
-                    <td>${team.played}</td>
-                    <td>${team.wins}</td>
-                    <td>${team.draws}</td>
-                    <td>${team.losses}</td>
-                    <td>${team.gf}</td>
-                    <td>${team.ga}</td>
-                    <td>${team.gd > 0 ? '+' : ''}${team.gd}</td>
-                    <td>${team.points}</td>
-                </tr>
-            `;
+        var sorted = Object.keys(standings).map(function (name) {
+            var s = standings[name];
+            return { name: name, played: s.played, wins: s.wins, draws: s.draws, losses: s.losses, gf: s.gf, ga: s.ga, gd: s.gf - s.ga, points: s.points };
+        }).sort(function (a, b) {
+            return b.points - a.points || b.gd - a.gd || b.gf - a.gf;
         });
 
-        tableHTML += `</tbody></table></div>`;
-        standingsWrapper.innerHTML = tableHTML;
+        var olRank = -1;
+        var olData = null;
+        for (var i = 0; i < sorted.length; i++) {
+            if (sorted[i].name === 'OL Dream Team') {
+                olRank = i + 1;
+                olData = sorted[i];
+                break;
+            }
+        }
 
-        // Show result
-        const resultDiv = document.getElementById('sim-result');
-        const resultTitle = document.getElementById('sim-result-title');
-        const resultSubtitle = document.getElementById('sim-result-subtitle');
-        const resultPoints = document.getElementById('sim-result-points');
-        const trophyContainer = document.getElementById('trophy-container');
+        // Build standings table
+        var standingsWrapper = document.getElementById('sim-standings-wrapper');
+        var html = '<div class="sim-standings"><table class="standings-table"><thead><tr>' +
+            '<th>#</th><th>Équipe</th><th>MJ</th><th>V</th><th>N</th><th>D</th>' +
+            '<th>BP</th><th>BC</th><th>Diff</th><th>Pts</th></tr></thead><tbody>';
+
+        sorted.forEach(function (team, idx) {
+            var isOL = team.name === 'OL Dream Team';
+            html += '<tr class="' + (isOL ? 'team-ol' : '') + '">' +
+                '<td>' + (idx + 1) + '</td>' +
+                '<td>' + team.name + '</td>' +
+                '<td>' + team.played + '</td>' +
+                '<td>' + team.wins + '</td>' +
+                '<td>' + team.draws + '</td>' +
+                '<td>' + team.losses + '</td>' +
+                '<td>' + team.gf + '</td>' +
+                '<td>' + team.ga + '</td>' +
+                '<td>' + (team.gd > 0 ? '+' : '') + team.gd + '</td>' +
+                '<td>' + team.points + '</td></tr>';
+        });
+        html += '</tbody></table></div>';
+        standingsWrapper.innerHTML = html;
+
+        var resultDiv = document.getElementById('sim-result');
+        var resultTitle = document.getElementById('sim-result-title');
+        var resultSubtitle = document.getElementById('sim-result-subtitle');
+        var resultPoints = document.getElementById('sim-result-points');
+        var trophyContainer = document.getElementById('trophy-container');
 
         resultPoints.textContent = olData.points;
 
         if (olRank === 1) {
             resultTitle.className = 'sim-result-title champion';
             resultTitle.textContent = '🏆 CHAMPION DE FRANCE !';
-            resultSubtitle.textContent = `Votre OL Dream Team remporte la Ligue 1 2026-2027 ! Une saison historique avec ${olData.wins} victoires !`;
+            resultSubtitle.textContent = 'Votre OL Dream Team remporte la Ligue 1 2026-2027 ! Une saison historique avec ' + olData.wins + ' victoires !';
             trophyContainer.textContent = '🏆';
             trophyContainer.style.display = 'block';
             spawnConfetti();
         } else if (olRank <= 3) {
             resultTitle.className = 'sim-result-title runner-up';
-            resultTitle.textContent = `${olRank}ème place — Podium !`;
-            resultSubtitle.textContent = `Votre OL Dream Team termine sur le podium de la Ligue 1. Qualification en Ligue des Champions !`;
+            resultTitle.textContent = olRank + 'ème place — Podium !';
+            resultSubtitle.textContent = 'Votre OL Dream Team termine sur le podium de la Ligue 1. Qualification en Ligue des Champions !';
             trophyContainer.textContent = '🥈';
             trophyContainer.style.display = 'block';
         } else if (olRank <= 5) {
             resultTitle.className = 'sim-result-title runner-up';
-            resultTitle.textContent = `${olRank}ème place — Europa League`;
-            resultSubtitle.textContent = `Saison correcte, mais le titre s'est envolé. Place européenne tout de même !`;
+            resultTitle.textContent = olRank + 'ème place — Europa League';
+            resultSubtitle.textContent = "Saison correcte, mais le titre s'est envolé. Place européenne tout de même !";
             trophyContainer.textContent = '⚽';
             trophyContainer.style.display = 'block';
         } else {
             resultTitle.className = 'sim-result-title failed';
-            resultTitle.textContent = `${olRank}ème place — Saison décevante`;
-            resultSubtitle.textContent = `Votre Dream Team n'a pas été à la hauteur cette saison. Peut-être une autre composition ?`;
+            resultTitle.textContent = olRank + 'ème place — Saison décevante';
+            resultSubtitle.textContent = "Votre Dream Team n'a pas été à la hauteur cette saison. Peut-être une autre composition ?";
             trophyContainer.textContent = '😔';
             trophyContainer.style.display = 'block';
         }
@@ -556,33 +540,27 @@
     }
 
     function spawnConfetti() {
-        const colors = ['#E5202E', '#006AA3', '#ffd700', '#ffffff', '#ff6b6b', '#4ade80'];
-        for (let i = 0; i < 60; i++) {
-            const c = document.createElement('div');
+        var colors = ['#E5202E', '#006AA3', '#ffd700', '#ffffff', '#ff6b6b', '#4ade80'];
+        for (var i = 0; i < 60; i++) {
+            var c = document.createElement('div');
             c.className = 'confetti';
             c.style.left = Math.random() * 100 + '%';
             c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
             c.style.width = (Math.random() * 8 + 5) + 'px';
             c.style.height = (Math.random() * 8 + 5) + 'px';
             c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
-            c.style.animation = `confettiFall ${Math.random() * 2 + 2}s linear ${Math.random() * 1.5}s forwards`;
+            c.style.animation = 'confettiFall ' + (Math.random() * 2 + 2) + 's linear ' + (Math.random() * 1.5) + 's forwards';
             document.body.appendChild(c);
-            setTimeout(() => c.remove(), 5000);
+            (function (el) {
+                setTimeout(function () { el.remove(); }, 5000);
+            })(c);
         }
     }
 
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    // ─── Play Again handler ────────────────────────────────────────
+    // ─── Play Again (global) ───────────────────────────────────────
     window.playAgain = function () {
         simOverlay.classList.remove('active');
-        // Remove confetti
-        document.querySelectorAll('.confetti').forEach(c => c.remove());
+        document.querySelectorAll('.confetti').forEach(function (c) { c.remove(); });
         resetGame();
     };
-
-    // ─── Kick Off ──────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', init);
-})();
+});
