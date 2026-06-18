@@ -54,12 +54,67 @@
     <!-- ── Football Pitch ─────────────────────────────────────── -->
     <div class="pitch-wrapper">
         <div class="pitch" id="pitch">
-            <!-- Pitch markings -->
-            <div class="pitch-marking-top"></div>
-            <div class="pitch-marking-bottom"></div>
-            <!-- Formation rows will be injected by JS -->
+            <!-- SVG Football Pitch with all real markings -->
+            <svg class="pitch-svg" viewBox="0 0 680 900" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Grass background with stripes -->
+                <defs>
+                    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#2d8c2d"/>
+                        <stop offset="100%" stop-color="#1e6e1e"/>
+                    </linearGradient>
+                </defs>
+                <rect width="680" height="900" fill="url(#grass)"/>
+                <!-- Grass stripes -->
+                <rect x="0" y="0" width="680" height="75" fill="rgba(255,255,255,0.03)"/>
+                <rect x="0" y="150" width="680" height="75" fill="rgba(255,255,255,0.03)"/>
+                <rect x="0" y="300" width="680" height="75" fill="rgba(255,255,255,0.03)"/>
+                <rect x="0" y="450" width="680" height="75" fill="rgba(255,255,255,0.03)"/>
+                <rect x="0" y="600" width="680" height="75" fill="rgba(255,255,255,0.03)"/>
+                <rect x="0" y="750" width="680" height="75" fill="rgba(255,255,255,0.03)"/>
+
+                <!-- Outer boundary -->
+                <rect x="40" y="30" width="600" height="840" rx="0" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2.5"/>
+
+                <!-- Center line -->
+                <line x1="40" y1="450" x2="640" y2="450" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+
+                <!-- Center circle -->
+                <circle cx="340" cy="450" r="72" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+                <!-- Center spot -->
+                <circle cx="340" cy="450" r="4" fill="rgba(255,255,255,0.6)"/>
+
+                <!-- TOP penalty area (opponent goal) -->
+                <rect x="160" y="30" width="360" height="145" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+                <!-- TOP goal area -->
+                <rect x="235" y="30" width="210" height="55" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+                <!-- TOP penalty spot -->
+                <circle cx="340" cy="135" r="3.5" fill="rgba(255,255,255,0.6)"/>
+                <!-- TOP penalty arc -->
+                <path d="M 262 175 A 72 72 0 0 0 418 175" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+                <!-- TOP goal -->
+                <rect x="270" y="15" width="140" height="15" rx="3" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-dasharray="6,4"/>
+
+                <!-- BOTTOM penalty area (our goal) -->
+                <rect x="160" y="725" width="360" height="145" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+                <!-- BOTTOM goal area -->
+                <rect x="235" y="815" width="210" height="55" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+                <!-- BOTTOM penalty spot -->
+                <circle cx="340" cy="765" r="3.5" fill="rgba(255,255,255,0.6)"/>
+                <!-- BOTTOM penalty arc -->
+                <path d="M 262 725 A 72 72 0 0 1 418 725" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2"/>
+                <!-- BOTTOM goal -->
+                <rect x="270" y="870" width="140" height="15" rx="3" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-dasharray="6,4"/>
+
+                <!-- Corner arcs -->
+                <path d="M 40 42 A 12 12 0 0 0 52 30" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+                <path d="M 628 30 A 12 12 0 0 0 640 42" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+                <path d="M 40 858 A 12 12 0 0 1 52 870" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+                <path d="M 628 870 A 12 12 0 0 1 640 858" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1.5"/>
+            </svg>
+            <!-- Player slots will be injected here by JS -->
         </div>
     </div>
+
 
     <!-- ── Confirm / Reset ────────────────────────────────────── -->
     <div class="confirm-wrapper">
