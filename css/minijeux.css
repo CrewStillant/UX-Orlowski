@@ -71,6 +71,8 @@
 
 /* ─── Pitch Container ───────────────────────────────────────── */
 .pitch-wrapper {
+    display: block;
+    width: 100%;
     max-width: 700px;
     margin: 2rem auto 3rem;
     padding: 0 1rem;
@@ -79,20 +81,24 @@
 .pitch {
     position: relative;
     width: 100%;
-    padding-bottom: 133%;  /* 4:3 ratio (height = 133% of width) */
+    height: 800px; /* robust fallback */
+    max-height: 80vh;
     border-radius: 12px;
-    overflow: hidden;
+    /* Removed overflow: hidden so slots are never clipped if they overflow slightly */
     box-shadow:
         0 0 60px rgba(34, 139, 34, 0.15),
         0 20px 60px rgba(0, 0, 0, 0.5);
+    background: #1e6e1e; /* fallback background */
 }
 
-/* SVG pitch background — drawn entirely in CSS to look like a real field */
+/* SVG pitch background */
 .pitch-svg {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    border-radius: 12px;
+    pointer-events: none; /* Make sure SVG doesn't steal clicks */
 }
 
 /* ─── Player Slot (absolute positioned on pitch) ─────────────── */
