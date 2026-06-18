@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coulisses - OLPLAY</title>
+    <title>Mini Jeux — OL Dream Team | OLPLAY</title>
+    <meta name="description" content="Construisez votre Dream Team OL historique en 4-3-3 et simulez une saison de Ligue 1 2026-2027 !">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/variables.css">
     <link rel="stylesheet" href="css/common.css">
-    <link rel="stylesheet" href="css/category.css">
+    <link rel="stylesheet" href="css/minijeux.css">
 </head>
 <body>
+
+    <!-- ── Navbar ─────────────────────────────────────────────── -->
     <nav class="navbar">
-        <a href="main.html" class="nav-logo">
+        <a href="main.html" class="nav-logo" aria-label="Accueil OLPLAY">
             <svg viewBox="0 0 4395.89 861.47" xmlns="http://www.w3.org/2000/svg">
                 <path class="logo-path" fill="#E5202E" fill-rule="evenodd" d="m455.69,0C198.49,0,0,174.79,0,430.73s198.49,430.74,455.69,430.74,455.69-174.79,455.69-430.74S712.88,0,455.69,0Zm0,639.22c-121.12,0-199.75-92.4-199.75-208.49s78.63-208.48,199.75-208.48,199.75,92.39,199.75,208.48-78.63,208.49-199.75,208.49ZM4147.18,13.76l-101.31,274.92-101.35-274.92h-248.57l225.63,612-81.39,220.68h249.6L4395.89,13.76h-248.71Zm-3208.34-.06h252.17v613.07h315.9v219.67h-568.07V13.7Zm1051.15,0h-444.44v832.74h252.17v-262.16h192.27c194.78,0,299.62-129.85,299.62-284.66S2184.77,13.7,1989.99,13.7Zm-32.43,350.84h-159.84v-131.11h159.84c42.43,0,76.18,21.24,76.18,66.18s-33.69,64.93-76.18,64.93Zm920.11,478.44L3183.51,13.7h317.09l307.23,832.74h-285.9l-29.98-97.36h-299.63l-29.98,97.36h-852.67V13.7h252.17v613.01h315.83v216.28Zm464.42-582.08l-82.4,268.44h164.8l-82.4-268.44Z"/>
             </svg>
@@ -39,29 +42,91 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <div class="category-hero">
-        <div class="hero-content">
-            <h1>Coulisses</h1>
-            <p>Entraînements et backstage</p>
-        </div>
-        <div class="hero-background">
-            <img src="images/Hamdani.jpg" alt="Coulisses" class="hero-img">
-            <div class="hero-overlay"></div>
+    <!-- ── Hero ───────────────────────────────────────────────── -->
+    <section class="minijeux-hero">
+        <h1 class="minijeux-hero-title">OL <span>Dream Team</span></h1>
+        <p class="minijeux-hero-subtitle">
+            Composez votre XI historique de l'OL en 4-3-3 et découvrez si vous auriez pu remporter la Ligue 1 2026-2027 !
+        </p>
+        <div class="minijeux-hero-badge">Formation 4-3-3 · Saison 2026-2027</div>
+    </section>
+
+    <!-- ── Football Pitch ─────────────────────────────────────── -->
+    <div class="pitch-wrapper">
+        <div class="pitch" id="pitch">
+            <!-- Pitch markings -->
+            <div class="pitch-marking-top"></div>
+            <div class="pitch-marking-bottom"></div>
+            <!-- Formation rows will be injected by JS -->
         </div>
     </div>
 
-    <!-- Content Section -->
-    <div class="content-wrapper">
-        <div class="category-grid" id="contentGrid">
-            <!-- Videos will be rendered here by JavaScript -->
+    <!-- ── Confirm / Reset ────────────────────────────────────── -->
+    <div class="confirm-wrapper">
+        <button class="confirm-btn" id="confirm-btn">⚽ Simuler la saison</button>
+        <button class="reset-btn" id="reset-btn">↺ Recommencer</button>
+    </div>
+
+    <!-- ── Player Selection Modal ─────────────────────────────── -->
+    <div class="player-modal-overlay" id="player-modal-overlay">
+        <div class="player-modal">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modal-title">Choisissez un joueur</div>
+                </div>
+                <span class="modal-position-badge" id="modal-position-badge">GB</span>
+                <button class="modal-close" id="modal-close">✕</button>
+            </div>
+            <div class="player-choices" id="player-choices">
+                <!-- Populated dynamically -->
+            </div>
         </div>
     </div>
 
-    <!-- CTA Section -->
-    <div class="cta-section">
-        <h2>Découvrez tous nos matchs</h2>
-        <a href="matchs.html" class="btn-primary">VOIR LES MATCHS</a>
+    <!-- ── Simulation Overlay ─────────────────────────────────── -->
+    <div class="simulation-overlay" id="simulation-overlay">
+        <div class="sim-container">
+            <div class="sim-title">Simulation <span>Ligue 1</span> 2026-2027</div>
+
+            <div class="sim-progress-wrapper">
+                <div class="sim-progress-label" id="sim-progress-label">Démarrage...</div>
+                <div class="sim-progress-bar">
+                    <div class="sim-progress-fill" id="sim-progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="sim-match-feed" id="sim-match-feed"></div>
+
+            <div class="sim-stats">
+                <div class="sim-stat-card">
+                    <div class="sim-stat-value" id="stat-wins">0</div>
+                    <div class="sim-stat-label">Victoires</div>
+                </div>
+                <div class="sim-stat-card">
+                    <div class="sim-stat-value" id="stat-draws">0</div>
+                    <div class="sim-stat-label">Nuls</div>
+                </div>
+                <div class="sim-stat-card">
+                    <div class="sim-stat-value" id="stat-losses">0</div>
+                    <div class="sim-stat-label">Défaites</div>
+                </div>
+                <div class="sim-stat-card">
+                    <div class="sim-stat-value" id="stat-points">0</div>
+                    <div class="sim-stat-label">Points</div>
+                </div>
+            </div>
+
+            <div id="sim-standings-wrapper"></div>
+
+            <div class="sim-result" id="sim-result">
+                <div class="trophy-container" id="trophy-container" style="display:none"></div>
+                <div class="sim-result-title" id="sim-result-title"></div>
+                <div class="sim-result-subtitle" id="sim-result-subtitle"></div>
+                <div class="sim-result-points" id="sim-result-points"></div>
+                <div class="sim-result-points-label">Points</div>
+                <button class="sim-play-again" onclick="playAgain()">🔄 Rejouer</button>
+            </div>
+        </div>
     </div>
 
     <!-- ── Footer ─────────────────────────────────────────────── -->
@@ -84,7 +149,7 @@
                     <ul>
                         <li><a href="main.html">Accueil</a></li>
                         <li><a href="matchs.html">Matchs</a></li>
-                        <li><a href="#">À propos</a></li>
+                        <li><a href="minijeux.html">Mini jeux</a></li>
                         <li><a href="#">Blog</a></li>
                     </ul>
                 </div>
@@ -128,7 +193,7 @@
 
     <script src="js/config.js"></script>
     <script src="js/components/navbar.js"></script>
-    <script src="js/category.js"></script>
+    <script src="js/minijeux.js"></script>
     <script src="js/cursor.js"></script>
 </body>
 </html>

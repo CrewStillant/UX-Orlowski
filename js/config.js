@@ -15,5 +15,6 @@ const ROUTES = {
     player:    'player.html',
     subscribe: 'subscribe.html',
     matchs:    'matchs.html',
+    minijeux:  'minijeux.html',
     notFound:  '404.html',
 };
