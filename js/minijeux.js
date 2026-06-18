@@ -3,7 +3,7 @@
 //  Build your historic OL XI in 4-3-3 and simulate Ligue 1 2026-27
 // =====================================================================
 
-document.addEventListener('DOMContentLoaded', function () {
+(function () {
     'use strict';
 
     // ─── OL Historic Players Database ──────────────────────────────
@@ -563,4 +563,4 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.confetti').forEach(function (c) { c.remove(); });
         resetGame();
     };
-});
+})();
